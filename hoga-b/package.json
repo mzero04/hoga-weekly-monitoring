@@ -1,0 +1,16 @@
+{
+  "name": "hoga-b-line-monitoring",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HOGA B - Weekly Line Monitoring System",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "check": "node scripts/check-syntax.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
