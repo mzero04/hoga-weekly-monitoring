@@ -15,7 +15,14 @@ const MASTER_ENGINEERS = [
     "Virgiawan Ramadhan"
 ];
 
-const MASTER_LINES = Array.from({ length: 32 }, (_, i) => `B${i + 1}`);
+// Jumlah line (B1 sampai B<LINE_COUNT>). Ubah angka ini saja jika jumlah line berubah lagi.
+const LINE_COUNT = 32;
+const MASTER_LINES = Array.from({ length: LINE_COUNT }, (_, i) => `B${i + 1}`);
+
+// Tampilkan kategori "At Risk"? (true = tampil, false = dihapus dari seluruh aplikasi)
+// At Risk = ada tahapan (Pre-layout / PP Approval / Chief Sample) yang berstatus Pending atau Not Started.
+// Jika false, line seperti itu dihitung sebagai "In Progress"; kartu, grafik, filter, dan PDF At Risk ikut hilang.
+const SHOW_AT_RISK = true;
 
 const MASTER_STATUS = ["Done", "In Progress", "Pending", "Not Started", "N/A"];
 

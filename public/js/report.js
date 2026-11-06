@@ -250,7 +250,7 @@ function downloadReportPdf() {
         { label: 'TOTAL LINE', value: String(mon.length), color: [30, 64, 175] },
         { label: 'LINE READY', value: `${ready} (${readyPct}%)`, color: [5, 150, 105] },
         { label: 'IN PROGRESS', value: String(prog), color: [217, 119, 6] },
-        { label: 'AT RISK / DELAY', value: String(risk), color: [225, 29, 72] },
+        ...(SHOW_AT_RISK ? [{ label: 'AT RISK / DELAY', value: String(risk), color: [225, 29, 72] }] : []),
         { label: 'TOTAL OVERLINE', value: String(ovr.length), color: [126, 34, 206] }
     ]);
 
@@ -263,7 +263,7 @@ function downloadReportPdf() {
     doc.text('Status Kesiapan per Engineer', PDF_M + 85, 50);
     addCanvasToPdf(doc, 'chartReadiness', PDF_M, 53, 75, 66);
     addCanvasToPdf(doc, 'chartEngineer', PDF_M + 85, 53, W - 2 * PDF_M - 85, 66);
-    doc.text('Status Tahapan per Line (B1 - B31)', PDF_M, 125);
+    doc.text(`Status Tahapan per Line (B1 - B${LINE_COUNT})`, PDF_M, 125);
     addCanvasToPdf(doc, 'chartLineStatus', PDF_M, 128, W - 2 * PDF_M, 66);
 
     // Tabel Monitoring
@@ -342,7 +342,7 @@ function downloadRecordsPdf() {
             { label: 'TOTAL DATA', value: String(rows.length), color: [30, 64, 175] },
             { label: 'READY', value: String(c.ready), color: [5, 150, 105] },
             { label: 'IN PROGRESS', value: String(c.prog), color: [217, 119, 6] },
-            { label: 'AT RISK', value: String(c.risk), color: [225, 29, 72] }
+            ...(SHOW_AT_RISK ? [{ label: 'AT RISK', value: String(c.risk), color: [225, 29, 72] }] : [])
         ];
     } else {
         const n = s => String(rows.filter(r => r.status === s).length);

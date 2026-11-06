@@ -58,13 +58,18 @@ function renderReadinessChart(ready, progress, risk) {
     const ctx = document.getElementById('chartReadiness').getContext('2d');
     if (chartReadinessInstance) chartReadinessInstance.destroy();
 
+    const labels = ['Ready', 'In Progress'];
+    const values = [ready, progress];
+    const colors = ['#10b981', '#f59e0b'];
+    if (SHOW_AT_RISK) { labels.push('At Risk'); values.push(risk); colors.push('#f43f5e'); }
+
     chartReadinessInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Ready', 'In Progress', 'At Risk'],
+            labels: labels,
             datasets: [{
-                data: [ready, progress, risk],
-                backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
+                data: values,
+                backgroundColor: colors,
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]
@@ -111,7 +116,7 @@ function renderEngineerChart(monData) {
             datasets: [
                 { label: 'Ready', data: readyData, backgroundColor: '#10b981' },
                 { label: 'In Progress', data: progressData, backgroundColor: '#f59e0b' },
-                { label: 'At Risk', data: riskData, backgroundColor: '#f43f5e' }
+                ...(SHOW_AT_RISK ? [{ label: 'At Risk', data: riskData, backgroundColor: '#f43f5e' }] : [])
             ]
         },
         options: {
@@ -128,12 +133,12 @@ function renderEngineerChart(monData) {
     });
 }
 
-// CHART 3: Line Status Grid Overview (B1 - B31)
+// CHART 3: Line Status Grid Overview (B1 - B<LINE_COUNT>)
 function renderLineStatusChart(monData) {
     const ctx = document.getElementById('chartLineStatus').getContext('2d');
     if (chartLineStatusInstance) chartLineStatusInstance.destroy();
 
-    // Prepare B1 to B31 scores
+    // Prepare B1 to B<LINE_COUNT> scores
     // Score values for visual bar height: Pre-layout (1), PP Approval (1), Chief Sample (1) -> Max 3
     const lineLabels = MASTER_LINES;
     const lineScores = lineLabels.map(lineId => {

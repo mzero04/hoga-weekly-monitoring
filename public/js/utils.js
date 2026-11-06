@@ -108,7 +108,7 @@ function calculateSummaryStatus(item) {
     const statuses = [item.preLayoutStatus, item.ppApprovalStatus, item.chiefSampleStatus];
     if (statuses.every(s => s === 'Done' || s === 'N/A')) {
         return 'Ready';
-    } else if (statuses.includes('Pending') || statuses.includes('Not Started')) {
+    } else if (SHOW_AT_RISK && (statuses.includes('Pending') || statuses.includes('Not Started'))) {
         return 'At Risk';
     } else {
         return 'In Progress';

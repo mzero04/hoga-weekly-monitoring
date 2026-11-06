@@ -159,7 +159,7 @@
                     </div>
                     <div>
                         <select id="filterLine" onchange="renderDashboard()" class="bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="ALL">Semua Line (B1-B31)</option>
+                            <option value="ALL" data-line-range="Semua Line ({range})">Semua Line</option>
                         </select>
                     </div>
                     <button onclick="clearDashboardFilters()" class="text-xs text-indigo-600 hover:underline px-2 py-1">Reset Filter</button>
@@ -171,13 +171,13 @@
             </div>
 
             <!-- KPI Metric Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div id="kpiGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <!-- Total Lines -->
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
                         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Line</p>
                         <h3 class="text-2xl font-bold text-slate-800 mt-1" id="kpi-total-lines">0</h3>
-                        <p class="text-xs text-slate-400 mt-1">Target Line B1-B31</p>
+                        <p class="text-xs text-slate-400 mt-1" data-line-range="Target Line {range}">Target Line</p>
                     </div>
                     <div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
                         <i data-lucide="layers" class="w-6 h-6"></i>
@@ -209,7 +209,7 @@
                 </div>
 
                 <!-- At Risk / Critical -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div id="kpiCardAtRisk" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
                         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">At Risk / Delay</p>
                         <h3 class="text-2xl font-bold text-rose-600 mt-1" id="kpi-at-risk">0</h3>
@@ -257,7 +257,7 @@
                 <!-- Status Per Line Grid Chart -->
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-base font-semibold text-slate-800">Monitoring Status Tahapan per Line (B1 - B31)</h3>
+                        <h3 class="text-base font-semibold text-slate-800" data-line-range="Monitoring Status Tahapan per Line ({range})">Monitoring Status Tahapan per Line</h3>
                         <span class="text-xs text-slate-400">Green: Done/NA | Yellow: In Progress | Red: Pending/Not Started</span>
                     </div>
                     <div class="h-[300px] w-full">
@@ -611,6 +611,32 @@
         <span id="toastText" class="text-xs font-medium">Notifikasi</span>
     </div>
 
+
+    <!-- ================= MODAL EDIT DATA ================= -->
+    <div id="editModal" class="hidden fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="modal-backdrop absolute inset-0 bg-slate-900/50" onclick="requestCloseEditModal()"></div>
+        <div class="relative min-h-full flex items-center justify-center p-4 pointer-events-none">
+            <div id="editModalPanel" class="modal-panel pointer-events-auto bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+                <div class="flex items-start justify-between p-5 border-b border-slate-100">
+                    <div>
+                        <h2 id="editModalTitle" class="text-lg font-bold text-slate-800">Edit Data</h2>
+                        <p id="editModalSubtitle" class="text-xs text-slate-500 mt-0.5"></p>
+                    </div>
+                    <button type="button" onclick="requestCloseEditModal()" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg" aria-label="Tutup">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <form id="editModalForm" method="post" action="#" onsubmit="event.preventDefault(); submitEditModal(); return false;" class="flex flex-col min-h-0">
+                    <div id="editModalFields" class="p-5 space-y-4 overflow-y-auto custom-scrollbar"></div>
+                    <div class="flex items-center justify-end gap-2 p-4 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl">
+                        <button type="button" onclick="requestCloseEditModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                        <button type="submit" id="editModalSave" class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 rounded-lg shadow-sm">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Application Scripts (urutan penting) -->
     <script src="js/config.js"></script>
     <script src="js/state.js"></script>
@@ -619,6 +645,7 @@
     <script src="js/data.js"></script>
     <script src="js/monitoring.js"></script>
     <script src="js/overline.js"></script>
+    <script src="js/modal.js"></script>
     <script src="js/filters.js"></script>
     <script src="js/records.js"></script>
     <script src="js/dashboard.js"></script>

@@ -3,7 +3,7 @@
 // INIT APP
 window.onload = async function() {
     safeIcons();
-    try { initFormDropdowns(); setDefaultDates(); initRecordFilters(); } catch (e) { console.error(e); }
+    try { initFormDropdowns(); setDefaultDates(); initRecordFilters(); applyLineRangeText(); applyRiskVisibility(); } catch (e) { console.error(e); }
     try { await initSupabase(); } catch (e) { console.error(e); showLoginError('Gagal memulai aplikasi: ' + (e.message || e)); }
 };
 
@@ -92,5 +92,23 @@ function switchRecordSubTab(subTabId) {
         btnMon.className = "px-4 py-2 rounded-lg font-medium text-sm text-slate-600 hover:bg-slate-100";
         contentOvr.classList.remove('hidden');
         contentMon.classList.add('hidden');
+    }
+}
+
+// Teks rentang line (mis. "B1 - B32") mengikuti LINE_COUNT di config.js
+function applyLineRangeText() {
+    document.querySelectorAll('[data-line-range]').forEach(el => {
+        el.textContent = el.dataset.lineRange.replace('{range}', `B1 - B${LINE_COUNT}`);
+    });
+}
+
+// Sembunyikan kartu At Risk (dan rapikan grid) jika SHOW_AT_RISK = false di config.js
+function applyRiskVisibility() {
+    const card = document.getElementById('kpiCardAtRisk');
+    if (card) card.classList.toggle('hidden', !SHOW_AT_RISK);
+    const grid = document.getElementById('kpiGrid');
+    if (grid) {
+        grid.classList.toggle('lg:grid-cols-5', SHOW_AT_RISK);
+        grid.classList.toggle('lg:grid-cols-4', !SHOW_AT_RISK);
     }
 }

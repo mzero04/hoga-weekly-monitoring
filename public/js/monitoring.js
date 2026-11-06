@@ -42,23 +42,7 @@ function resetMonitoringForm() {
 }
 
 function editMonitoring(id) {
-    const item = monitoringList.find(m => m.id === id);
-    if(!item) return;
-
-    document.getElementById('monId').value = item.id;
-    document.getElementById('monReportDate').value = item.reportDate;
-    document.getElementById('monEngineer').value = item.engineer;
-    document.getElementById('monLine').value = item.line;
-    document.getElementById('monCurrentStyle').value = item.currentStyle;
-    document.getElementById('monNextStyle').value = item.nextStyle;
-    document.getElementById('monPlannedStartDate').value = item.plannedStartDate;
-    document.getElementById('monPreLayoutStatus').value = item.preLayoutStatus;
-    document.getElementById('monPpApprovalStatus').value = item.ppApprovalStatus;
-    document.getElementById('monChiefSampleStatus').value = chiefLabel(item.chiefSampleStatus);
-    document.getElementById('monRemark').value = item.remark;
-
-    calcDaysToStart();
-    switchTab('monitoring');
+    openEditModal('monitoring', id);
 }
 
 async function deleteMonitoring(id) {

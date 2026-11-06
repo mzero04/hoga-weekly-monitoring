@@ -38,20 +38,7 @@ function resetOverlineForm() {
 }
 
 function editOverline(id) {
-    const item = overlineList.find(o => o.id === id);
-    if(!item) return;
-
-    document.getElementById('ovrId').value = item.id;
-    document.getElementById('ovrReportWeekStart').value = item.reportWeekStart;
-    document.getElementById('ovrEngineer').value = item.engineer;
-    document.getElementById('ovrLine').value = item.line;
-    document.getElementById('ovrCurrentStyle').value = item.currentStyle;
-    document.getElementById('ovrNextStyle').value = item.nextStyle;
-    document.getElementById('ovrPlannedOverlineDate').value = item.plannedOverlineDate;
-    document.getElementById('ovrStatus').value = item.status;
-    document.getElementById('ovrRemark').value = item.remark;
-
-    switchTab('overline');
+    openEditModal('overline', id);
 }
 
 async function deleteOverline(id) {

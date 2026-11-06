@@ -17,3 +17,9 @@ body { font-family: 'Inter', sans-serif; }
 }
 .rec-filter:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 1px #6366f1; }
 .rec-filter.active { border-color: #6366f1; background: #eef2ff; }
+
+/* Modal edit data */
+#editModal .modal-backdrop { opacity: 0; backdrop-filter: blur(2px); transition: opacity .18s ease; }
+#editModal .modal-panel { opacity: 0; transform: translateY(10px) scale(.97); transition: opacity .18s ease, transform .18s ease; }
+#editModal.modal-open .modal-backdrop { opacity: 1; }
+#editModal.modal-open .modal-panel { opacity: 1; transform: none; }

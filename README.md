@@ -1,13 +1,13 @@
 # HOGA B - Weekly Line Monitoring System
 
-Aplikasi monitoring kesiapan line (B1-B31) dan overline mingguan.
+Aplikasi monitoring kesiapan line (B1-B32) dan overline mingguan.
 Frontend statis + serverless API di Vercel, database dan login di Supabase.
 
 ## Fitur
 
 - Login (Supabase Auth) dengan role `admin` dan `user`
 - Dashboard: KPI, grafik kesiapan, grafik per engineer, status per line, filter engineer / line
-- Input Monitoring dan Input Overline (tambah, ubah, hapus)
+- Input Monitoring dan Input Overline (tambah di form, ubah lewat pop-up modal, hapus)
 - Data Records dengan pencarian di semua kolom, filter per kolom, urut kolom (klik header), Export / Import Excel, dan Export PDF sesuai filter
 - Laporan PDF dashboard lengkap (sesuai filter dashboard) dan PDF Data Records (sesuai filter + urutan di layar)
 - Realtime: perubahan data muncul otomatis tanpa refresh
@@ -29,6 +29,7 @@ hoga-b/
 │       ├── monitoring.js    form + aksi Input Monitoring
 │       ├── overline.js      form + aksi Input Overline
 │       ├── filters.js       definisi kolom, filter per kolom, pencarian global, urutan
+│       ├── modal.js         pop-up (modal) edit data Monitoring dan Overline
 │       ├── records.js       tabel Data Records
 │       ├── dashboard.js     KPI dan grafik
 │       ├── report.js        laporan PDF (dashboard + Data Records)
@@ -52,6 +53,14 @@ hoga-b/
 Catatan: file di `public/js` adalah script biasa (bukan module) yang berbagi scope global,
 jadi **urutan `<script>` di `index.html` penting**. Menambah fitur baru = buat file js baru
 lalu daftarkan di `index.html` sebelum `app.js`.
+
+## Pengaturan cepat (public/js/config.js)
+
+| Konstanta | Fungsi |
+|---|---|
+| `LINE_COUNT` | Jumlah line (B1 sampai B&lt;n&gt;). Semua dropdown, filter, grafik, PDF, dan teks rentang line mengikutinya. |
+| `SHOW_AT_RISK` | `true` = kategori At Risk tampil. `false` = At Risk dihapus dari seluruh aplikasi; line yang tadinya At Risk dihitung In Progress. |
+| `MASTER_ENGINEERS` | Daftar engineer. |
 
 ## Setup
 

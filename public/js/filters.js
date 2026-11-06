@@ -8,7 +8,7 @@ const DAYS_BUCKETS = [
     { value: 'long', label: 'Lebih dari 7 hari', test: d => d > 7 }
 ];
 
-const SUMMARY_OPTIONS = ['Ready', 'In Progress', 'At Risk'];
+const SUMMARY_OPTIONS = SHOW_AT_RISK ? ['Ready', 'In Progress', 'At Risk'] : ['Ready', 'In Progress'];
 
 function daysLeftOf(item) {
     return calculateDaysToStart(item.reportDate, item.plannedStartDate);
