@@ -15,7 +15,7 @@ const MASTER_ENGINEERS = [
     "Virgiawan Ramadhan"
 ];
 
-const MASTER_LINES = Array.from({ length: 31 }, (_, i) => `B${i + 1}`);
+const MASTER_LINES = Array.from({ length: 32 }, (_, i) => `B${i + 1}`);
 
 const MASTER_STATUS = ["Done", "In Progress", "Pending", "Not Started", "N/A"];
 
