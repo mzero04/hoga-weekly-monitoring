@@ -53,7 +53,8 @@ function monFromDb(r) {
         preLayoutStatus: r.pre_layout_status,
         ppApprovalStatus: r.pp_approval_status,
         chiefSampleStatus: r.chief_sample_status,
-        remark: r.remark || '-'
+        remark: r.remark || '-',
+        createdBy: r.created_by || null
     };
 }
 
@@ -84,7 +85,8 @@ function ovrFromDb(r) {
         nextStyle: r.next_style || '-',
         plannedOverlineDate: r.planned_overline_date,
         status: r.status,
-        remark: r.remark || '-'
+        remark: r.remark || '-',
+        createdBy: r.created_by || null
     };
 }
 
@@ -161,15 +163,16 @@ function formatMiniBadge(status) {
 }
 
 // NOTIFICATION TOAST
-function showToast(message) {
+function showToast(message, ms) {
     const toast = document.getElementById('toastNotification');
     const toastText = document.getElementById('toastText');
     toastText.innerText = message;
     toast.classList.remove('translate-y-20', 'opacity-0');
     toast.classList.add('translate-y-0', 'opacity-100');
 
-    setTimeout(() => {
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => {
         toast.classList.remove('translate-y-0', 'opacity-100');
         toast.classList.add('translate-y-20', 'opacity-0');
-    }, 3000);
+    }, ms || 3000);
 }

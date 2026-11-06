@@ -51,6 +51,7 @@ function renderDashboard() {
     renderReadinessChart(readyCount, inProgressCount, atRiskCount);
     renderEngineerChart(filteredMon);
     renderLineStatusChart(filteredMon);
+    renderTimeline();
 }
 
 // CHART 1: Readiness Doughnut

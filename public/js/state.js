@@ -21,3 +21,14 @@ let currentSession = null;
 let currentProfile = null;
 
 let appStarted = false;
+
+// RIWAYAT & TIMELINE
+let chartTimelineInstance = null;
+
+let chartStageInstance = null;
+
+let historyRows = [];          // seluruh riwayat (untuk grafik timeline)
+
+let historyAvailable = null;   // null = belum dimuat, true / false = tabel riwayat ada / belum ada
+
+let historyError = '';

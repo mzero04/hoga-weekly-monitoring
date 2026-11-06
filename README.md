@@ -7,7 +7,10 @@ Frontend statis + serverless API di Vercel, database dan login di Supabase.
 
 - Login (Supabase Auth) dengan role `admin` dan `user`
 - Dashboard: KPI, grafik kesiapan, grafik per engineer, status per line, filter engineer / line
-- Input Monitoring dan Input Overline (tambah di form, ubah lewat pop-up modal, hapus)
+- Input Monitoring dan Input Overline (tambah di form, hapus)
+- **Update Progress** (semua user) dan **Koreksi Data** (admin / pembuat data) lewat pop-up modal, keduanya tercatat di riwayat
+- **Riwayat** per data (timeline perubahan: siapa, kapan, apa yang berubah, catatan)
+- **Timeline Progress Harian** di Dashboard: status line per hari dan progress per tahapan, dibangun dari riwayat
 - Data Records dengan pencarian di semua kolom, filter per kolom, urut kolom (klik header), Export / Import Excel, dan Export PDF sesuai filter
 - Laporan PDF dashboard lengkap (sesuai filter dashboard) dan PDF Data Records (sesuai filter + urutan di layar)
 - Realtime: perubahan data muncul otomatis tanpa refresh
@@ -29,7 +32,9 @@ hoga-b/
 │       ├── monitoring.js    form + aksi Input Monitoring
 │       ├── overline.js      form + aksi Input Overline
 │       ├── filters.js       definisi kolom, filter per kolom, pencarian global, urutan
-│       ├── modal.js         pop-up (modal) edit data Monitoring dan Overline
+│       ├── modal.js         pop-up Update Progress dan Koreksi Data
+│       ├── history.js       memuat riwayat + panel Riwayat per data
+│       ├── timeline.js      grafik timeline progress harian (memutar ulang riwayat per hari)
 │       ├── records.js       tabel Data Records
 │       ├── dashboard.js     KPI dan grafik
 │       ├── report.js        laporan PDF (dashboard + Data Records)
@@ -43,6 +48,7 @@ hoga-b/
 │   ├── config.js            GET /api/config  (URL + anon key untuk frontend)
 │   └── users.js             /api/users       (GET/POST/PATCH/DELETE, khusus admin)
 ├── supabase/schema.sql      <- tabel, constraint, RLS, trigger, realtime (aman untuk DB lama)
+├── supabase/history.sql     <- riwayat: tabel, fungsi save_with_history, trigger, aturan akses (jalankan SETELAH schema.sql)
 ├── supabase/check-existing.sql <- cek kecocokan database lama (hanya membaca)
 ├── scripts/check-syntax.js  <- npm run check
 ├── vercel.json
@@ -79,8 +85,9 @@ lalu daftarkan di `index.html` sebelum `app.js`.
 2. Jika tidak ada kolom wajib yang hilang, jalankan `supabase/schema.sql`. File ini **tidak menghapus atau mengubah data lama**:
    tabel yang sudah ada dilewati, kolom pendukung yang belum ada (`updated_at`, `created_by`, `created_at`, `email`) ditambahkan,
    dan email di `profiles` yang kosong diisi dari `auth.users`.
-3. Data lama tetap terbaca karena nama kolom yang dipakai aplikasi tidak berubah.
-4. Constraint ketat (format line, daftar status) hanya dipasang pada tabel baru, sehingga tidak menolak data lama.
+3. Jalankan `supabase/history.sql` (lihat bagian Riwayat di bawah).
+4. Data lama tetap terbaca karena nama kolom yang dipakai aplikasi tidak berubah.
+5. Constraint ketat (format line, daftar status) hanya dipasang pada tabel baru, sehingga tidak menolak data lama.
 
 ### 2. Environment variable
 Salin `.env.example` ke `.env.local` (lokal) dan isi juga di
@@ -105,6 +112,30 @@ npm i -g vercel
 vercel dev        # buka http://localhost:3000
 npm run check     # periksa sintaks semua file JS
 ```
+
+## Riwayat, Update Progress, dan Koreksi Data
+
+**Dua jenis perubahan, sengaja dipisah:**
+
+| | Update Progress | Koreksi Data |
+|---|---|---|
+| Untuk | Perkembangan di lapangan (mis. PP Approval Pending menjadi Done) | Memperbaiki salah input |
+| Siapa | Semua user yang login | Admin atau pembuat data (`created_by`) |
+| Kolom | Tahapan, Planned date, catatan | Semua kolom |
+| Tanggal | Dipilih user (default hari ini), tidak boleh lebih awal dari update terakhir | Hari ini |
+| Di grafik timeline | Dihitung sebagai perubahan status pada tanggalnya | Berlaku dari tanggal koreksi |
+
+**Cara memasang (sekali):**
+1. Jalankan `supabase/history.sql` di Supabase SQL Editor. Aman dijalankan ulang, data lama tidak diubah.
+2. **Baru** deploy aplikasi versi ini. Aplikasi versi lama tidak bisa mengedit data setelah SQL ini dijalankan, karena UPDATE langsung ke tabel ditutup.
+
+**Aturan penting:**
+- Perubahan data hanya lewat fungsi `save_with_history` (data dan riwayat tersimpan sekaligus). Tabel `record_history` hanya bisa ditambah, tidak bisa diubah atau dihapus oleh user mana pun.
+- Tambah dan hapus data dicatat otomatis oleh trigger. Riwayat data yang dihapus tetap tersimpan.
+- Data yang sudah ada sebelum riwayat diaktifkan dicatat sebagai "Data awal" pada hari SQL dijalankan, jadi grafik timeline mulai dari hari itu.
+- Perubahan lewat Supabase Table Editor atau SQL Editor (service role) tidak tercatat. Gunakan aplikasi untuk mengubah data.
+- Data lama yang `created_by`-nya kosong hanya bisa dikoreksi admin.
+- Jika SQL belum dijalankan, aplikasi tetap terbuka: grafik timeline menampilkan pesan, dan tombol simpan menunjukkan cara mengaktifkannya.
 
 ## Keamanan
 

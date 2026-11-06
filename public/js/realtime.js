@@ -29,6 +29,7 @@ async function refreshQuiet() {
         if (mon.error || ovr.error) return;
         monitoringList = (mon.data || []).map(monFromDb);
         overlineList = (ovr.data || []).map(ovrFromDb);
+        await loadHistory();
         renderDashboard();
         renderTables();
     } catch (e) { console.warn('Refresh gagal:', e); }
@@ -49,6 +50,7 @@ function startRealtime() {
         realtimeChannel = sb.channel('hoga-b-live')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'monitoring' }, onRealtimeChange)
             .on('postgres_changes', { event: '*', schema: 'public', table: 'overline' }, onRealtimeChange)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'record_history' }, onRealtimeChange)
             .subscribe((status) => {
                 if (status === 'SUBSCRIBED') setLiveStatus(true);
                 else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') setLiveStatus(false, 'Offline');

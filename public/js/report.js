@@ -266,6 +266,21 @@ function downloadReportPdf() {
     doc.text(`Status Tahapan per Line (B1 - B${LINE_COUNT})`, PDF_M, 125);
     addCanvasToPdf(doc, 'chartLineStatus', PDF_M, 128, W - 2 * PDF_M, 66);
 
+    // Timeline progress harian (jika riwayat aktif)
+    if (historyAvailable !== false && document.getElementById('chartTimeline') && chartTimelineInstance) {
+        doc.addPage();
+        drawPdfSlimHeader(doc, slim);
+        pdfSectionTitle(doc, `Timeline Progress Harian (${timelineRange ? timelineRange + ' hari terakhir' : 'semua riwayat'})`, 20);
+        const half = (W - 2 * PDF_M - 8) / 2;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('Status Kesiapan Line per Hari', PDF_M, 30);
+        doc.text('Progress per Tahapan (% line selesai)', PDF_M + half + 8, 30);
+        [chartTimelineInstance, chartStageInstance].forEach(c => { try { if (c) c.update('none'); } catch (e) {} });
+        addCanvasToPdf(doc, 'chartTimeline', PDF_M, 33, half, 90);
+        addCanvasToPdf(doc, 'chartStage', PDF_M + half + 8, 33, half, 90);
+    }
+
     // Tabel Monitoring
     doc.addPage();
     drawPdfSlimHeader(doc, slim);

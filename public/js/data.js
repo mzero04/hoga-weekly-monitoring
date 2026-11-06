@@ -10,6 +10,7 @@ async function loadData() {
     if (ovr.error) showToast('Gagal memuat data overline: ' + ovr.error.message);
     monitoringList = (mon.data || []).map(monFromDb);
     overlineList = (ovr.data || []).map(ovrFromDb);
+    await loadHistory();
     renderDashboard();
     renderTables();
 }

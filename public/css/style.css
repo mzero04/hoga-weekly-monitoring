@@ -23,3 +23,29 @@ body { font-family: 'Inter', sans-serif; }
 #editModal .modal-panel { opacity: 0; transform: translateY(10px) scale(.97); transition: opacity .18s ease, transform .18s ease; }
 #editModal.modal-open .modal-backdrop { opacity: 1; }
 #editModal.modal-open .modal-panel { opacity: 1; transform: none; }
+
+/* Modal: warna per mode */
+#editModal[data-mode="progress"] .modal-badge { background: #e0e7ff; color: #4338ca; }
+#editModal[data-mode="progress"] .modal-info { background: #eef2ff; color: #3730a3; }
+#editModal[data-mode="correction"] .modal-badge { background: #fef3c7; color: #b45309; }
+#editModal[data-mode="correction"] .modal-info { background: #fffbeb; color: #92400e; }
+#editModal[data-mode="correction"] #editModalSave { background: #d97706; }
+#editModal[data-mode="correction"] #editModalSave:hover { background: #b45309; }
+.field-changed { border-color: #6366f1 !important; background: #eef2ff !important; }
+
+/* Panel Riwayat (drawer kanan) */
+#historyDrawer .modal-backdrop { opacity: 0; backdrop-filter: blur(2px); transition: opacity .2s ease; }
+#historyDrawer .drawer-panel { transform: translateX(100%); transition: transform .22s ease; }
+#historyDrawer.modal-open .modal-backdrop { opacity: 1; }
+#historyDrawer.modal-open .drawer-panel { transform: none; }
+
+/* Timeline riwayat */
+.hist-list { position: relative; margin-left: 6px; border-left: 2px solid #e2e8f0; list-style: none; padding: 0; }
+.hist-item { position: relative; padding: 0 0 22px 18px; }
+.hist-item:last-child { padding-bottom: 4px; }
+.hist-dot { position: absolute; left: -7px; top: 3px; width: 12px; height: 12px; border-radius: 9999px; border: 2px solid #fff; box-shadow: 0 0 0 1px #e2e8f0; }
+
+/* Kolom Aksi selalu terlihat di sisi kanan saat tabel di-scroll ke samping */
+.rec-scroll td:last-child { position: sticky; right: 0; background: #fff; box-shadow: -1px 0 0 #e2e8f0; }
+.rec-scroll tr:hover td:last-child { background: #f8fafc; }
+.rec-thead tr th:last-child { position: sticky; right: 0; z-index: 11; background: #f1f5f9; box-shadow: -1px 0 0 #e2e8f0; }

@@ -3,9 +3,7 @@
 async function handleSaveOverline(e) {
     e.preventDefault();
     markOwnAction();
-    const existingId = document.getElementById('ovrId').value;
     const newData = {
-        id: existingId || undefined,
         reportWeekStart: document.getElementById('ovrReportWeekStart').value,
         engineer: document.getElementById('ovrEngineer').value,
         line: document.getElementById('ovrLine').value,
@@ -16,15 +14,11 @@ async function handleSaveOverline(e) {
         remark: document.getElementById('ovrRemark').value || '-'
     };
 
-    let error;
-    if (existingId) {
-        ({ error } = await sb.from('overline').update(ovrToDb(newData)).eq('id', existingId));
-    } else {
-        ({ error } = await sb.from('overline').insert(ovrToDb(newData)));
-    }
+    // Data baru saja. Perubahan data yang sudah ada dilakukan lewat Update Progress / Koreksi Data (modal).
+    const { error } = await sb.from('overline').insert(ovrToDb(newData));
     if (error) return showToast("Gagal menyimpan: " + error.message);
 
-    showToast(existingId ? "Data Overline berhasil diperbarui." : "Data Overline baru berhasil ditambahkan.");
+    showToast("Data Overline baru berhasil ditambahkan.");
     await loadData();
     resetOverlineForm();
     switchTab('records');
@@ -37,9 +31,9 @@ function resetOverlineForm() {
     setDefaultDates();
 }
 
-function editOverline(id) {
-    openEditModal('overline', id);
-}
+// Update Progress (semua user) dan Koreksi Data (admin / pembuat data) lewat modal
+function progressOverline(id) { openEditModal('overline', id, 'progress'); }
+function correctOverline(id) { openEditModal('overline', id, 'correction'); }
 
 async function deleteOverline(id) {
     markOwnAction();

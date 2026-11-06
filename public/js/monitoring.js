@@ -4,9 +4,7 @@
 async function handleSaveMonitoring(e) {
     e.preventDefault();
     markOwnAction();
-    const existingId = document.getElementById('monId').value;
     const newData = {
-        id: existingId || undefined,
         reportDate: document.getElementById('monReportDate').value,
         engineer: document.getElementById('monEngineer').value,
         line: document.getElementById('monLine').value,
@@ -19,15 +17,11 @@ async function handleSaveMonitoring(e) {
         remark: document.getElementById('monRemark').value || '-'
     };
 
-    let error;
-    if (existingId) {
-        ({ error } = await sb.from('monitoring').update(monToDb(newData)).eq('id', existingId));
-    } else {
-        ({ error } = await sb.from('monitoring').insert(monToDb(newData)));
-    }
+    // Data baru saja. Perubahan data yang sudah ada dilakukan lewat Update Progress / Koreksi Data (modal).
+    const { error } = await sb.from('monitoring').insert(monToDb(newData));
     if (error) return showToast("Gagal menyimpan: " + error.message);
 
-    showToast(existingId ? "Data Monitoring berhasil diperbarui." : "Data Monitoring baru berhasil ditambahkan.");
+    showToast("Data Monitoring baru berhasil ditambahkan.");
     await loadData();
     resetMonitoringForm();
     switchTab('records');
@@ -41,9 +35,9 @@ function resetMonitoringForm() {
     document.getElementById('monDaysToStartDisplay').innerText = "0 Hari";
 }
 
-function editMonitoring(id) {
-    openEditModal('monitoring', id);
-}
+// Update Progress (semua user) dan Koreksi Data (admin / pembuat data) lewat modal
+function progressMonitoring(id) { openEditModal('monitoring', id, 'progress'); }
+function correctMonitoring(id) { openEditModal('monitoring', id, 'correction'); }
 
 async function deleteMonitoring(id) {
     markOwnAction();

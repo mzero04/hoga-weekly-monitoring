@@ -1,5 +1,18 @@
 /* Tabel Data Records */
 
+// Tombol aksi per baris: Update Progress (utama), Riwayat, Koreksi Data, Hapus
+function actionButtons(table, item) {
+    const T = table === 'monitoring' ? 'Monitoring' : 'Overline';
+    const id = esc(item.id);
+    const allowed = canCorrect(item);
+    return `<div class="flex items-center justify-center gap-1">
+        <button onclick="progress${T}('${id}')" class="px-2 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded flex items-center gap-1" title="Update progress (catat perkembangan)"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i><span>Update</span></button>
+        <button onclick="openHistory('${table}','${id}')" class="p-1 text-slate-600 hover:bg-slate-100 rounded" title="Riwayat perubahan"><i data-lucide="history" class="w-4 h-4"></i></button>
+        <button onclick="correct${T}('${id}')" class="p-1 rounded ${allowed ? 'text-amber-600 hover:bg-amber-50' : 'text-slate-300 cursor-not-allowed'}" title="${allowed ? 'Koreksi data (salah input)' : 'Koreksi hanya untuk admin atau pembuat data'}"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+        <button onclick="delete${T}('${id}')" class="p-1 text-rose-600 hover:bg-rose-50 rounded" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+    </div>`;
+}
+
 // RENDER TABLES
 function renderTables() {
     syncFilterOptions();
@@ -37,12 +50,7 @@ function renderTables() {
                     <td class="p-3">${formatChiefBadge(item.chiefSampleStatus)}</td>
                     <td class="p-3">${statusBadge}</td>
                     <td class="p-3 text-slate-600 max-w-xs truncate" title="${esc(item.remark)}">${esc(item.remark)}</td>
-                    <td class="p-3 text-center">
-                        <div class="flex items-center justify-center space-x-2">
-                            <button onclick="editMonitoring('${esc(item.id)}')" class="p-1 text-blue-600 hover:bg-blue-50 rounded" title="Edit"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                            <button onclick="deleteMonitoring('${esc(item.id)}')" class="p-1 text-rose-600 hover:bg-rose-50 rounded" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>
-                    </td>
+                    <td class="p-3 text-center">${actionButtons('monitoring', item)}</td>
                 </tr>
             `;
         }).join('');
@@ -69,12 +77,7 @@ function renderTables() {
                     <td class="p-3">${esc(item.plannedOverlineDate)}</td>
                     <td class="p-3">${formatMiniBadge(item.status)}</td>
                     <td class="p-3 text-slate-600 max-w-xs truncate">${esc(item.remark)}</td>
-                    <td class="p-3 text-center">
-                        <div class="flex items-center justify-center space-x-2">
-                            <button onclick="editOverline('${esc(item.id)}')" class="p-1 text-blue-600 hover:bg-blue-50 rounded" title="Edit"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                            <button onclick="deleteOverline('${esc(item.id)}')" class="p-1 text-rose-600 hover:bg-rose-50 rounded" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>
-                    </td>
+                    <td class="p-3 text-center">${actionButtons('overline', item)}</td>
                 </tr>
             `;
         }).join('');
